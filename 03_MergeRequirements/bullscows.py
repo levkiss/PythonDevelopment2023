@@ -1,6 +1,7 @@
 import argparse
 import random
 import sys
+from cowsay import cowsay, list_cows
 from os.path import isfile
 from urllib import request as req
 
@@ -27,16 +28,21 @@ def gameplay(ask, inform, words):
 
 
 def ask(prompt, valid=None):
-    word = input(prompt)
+    word = input(cowsay.cowsay(prompt, cowfile=getcow_random()) + '\n\n')
     if valid is not None:
         while word not in valid:
-            print('Введённого слова нет в словаре')
-            word = input(prompt)
+            print(cowsay.cowsay('Введённого слова нет в словаре', cowfile=getcow_random()) + '\n\n')
+            word = input(cowsay.cowsay(prompt, cowfile=getcow_random()) + '\n\n')
     return word
 
 
+def getcow_random() -> str:
+    return random.choice(list_cows())
+
+
 def inform(format_string, bulls, cows):
-    print(format_string.format(bulls, cows))
+    message = cowsay(format_string.format(bulls, cows), cow=getcow_random()) + '\n'
+    print(message)
 
 
 if __name__ == '__main__':
