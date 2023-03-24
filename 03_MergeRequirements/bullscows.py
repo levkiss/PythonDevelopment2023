@@ -16,23 +16,23 @@ def bullscows(guess, secret):
     return bulls, cows
 
 
-def gameplay(ask, inform, words):
+def gameplay(ask, inform, words, cow):
     wrd = random.choice(words)
     attempt = 1
     user_word = ''
     while user_word != wrd:
-        user_word = ask(f'Введите слово: ', words)
+        user_word = ask(f'Введите слово: ', cow, words)
         inform('Быки: {}, Коровы: {}', *bullscows(user_word, wrd))
         attempt += 1
     return attempt
 
 
-def ask(prompt, valid=None):
-    word = input(cowsay.cowsay(prompt, cowfile=getcow_random()) + '\n\n')
+def ask(prompt, cow, valid=None):
+    word = input(cowsay.cowsay(prompt, cowfile=cow) + '\n\n')
     if valid is not None:
         while word not in valid:
-            print(cowsay.cowsay('Введённого слова нет в словаре', cowfile=getcow_random()) + '\n\n')
-            word = input(cowsay.cowsay(prompt, cowfile=getcow_random()) + '\n\n')
+            print(cowsay.cowsay('Введённого слова нет в словаре', cowfile=cow) + '\n\n')
+            word = input(cowsay.cowsay(prompt, cowfile=cow) + '\n\n')
     return word
 
 
@@ -51,6 +51,10 @@ if __name__ == '__main__':
     parser.add_argument('length', nargs='?', default=5, type=int)
     args = parser.parse_args()
 
+    file = open('cow.txt', 'r')
+    cow = file.read()
+    file.close()
+
     if isfile(args.dict):
         with open(args.dict, 'rb') as f:
             allWords = f.read().decode().split()
@@ -64,4 +68,4 @@ if __name__ == '__main__':
         print('Запустите игру с меньшей длиной слова')
         exit(0)
 
-    print(f'Вы угадали слово за {gameplay(ask, inform, dictionary)} попыток')
+    print(f'Вы угадали слово за {gameplay(ask, inform, dictionary, cow)} попыток')
